@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Scale, Menu } from "lucide-react";
 import { ModeToggle } from "@/components/mode-toggle";
-import { usePathname } from "next/navigation"; // <--- Import this
+import { usePathname } from "next/navigation";
 import {
   Sheet,
   SheetContent,
@@ -12,48 +12,48 @@ import {
 } from "@/components/ui/sheet";
 
 export default function Navbar() {
-  const pathname = usePathname(); // <--- Get current route
+  const pathname = usePathname();
 
-  // Logic: If we are on the chat page, DO NOT render this Navbar
+  // Hide Navbar on chat interface to maximize screen real estate
   if (pathname === "/chat") {
     return null;
   }
 
   const navLinks = [
-    { name: "Nyaya Sahayak Chat", href: "/chat" },
     { name: "Features", href: "/#features" },
     { name: "How it Works", href: "/#how-it-works" },
+    { name: "Our Mission", href: "/#constitution" }, // Renamed for emotional connection
   ];
 
   return (
-    // Floating Pill Container
+    // Floating Glass Pill - High Z-Index to stay on top
     <nav className="fixed top-6 left-1/2 -translate-x-1/2 w-[95%] max-w-5xl z-50">
-      <div className="rounded-full border border-white/20 dark:border-white/10 bg-white/10 dark:bg-black/20 backdrop-blur-xl shadow-xl hover:shadow-2xl hover:bg-white/20 dark:hover:bg-black/40 px-6 py-3 flex items-center justify-between transition-all duration-300">
+      <div className="rounded-full border border-white/20 dark:border-white/10 bg-white/10 dark:bg-black/20 backdrop-blur-xl shadow-xl hover:shadow-2xl transition-all duration-300 px-6 py-3 flex items-center justify-between">
         
-        {/* Logo Area */}
+        {/* Logo - Anchors the brand */}
         <Link href="/" className="flex items-center gap-2 font-bold text-lg text-slate-900 dark:text-slate-100 hover:opacity-80 transition-opacity">
           <Scale className="h-5 w-5" />
           <span>BharatJuris</span>
         </Link>
 
-        {/* Desktop Nav */}
+        {/* Desktop Nav - Clean & Scannable */}
         <div className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-700 dark:text-slate-200">
           {navLinks.map((link) => (
             <Link 
               key={link.name} 
               href={link.href} 
-              className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-semibold"
+              className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-semibold tracking-wide"
             >
               {link.name}
             </Link>
           ))}
         </div>
 
-        {/* Right Actions */}
+        {/* Right Actions - The "Call to Action" */}
         <div className="hidden md:flex items-center gap-3">
            <ModeToggle />
            <Link href="/chat">
-            <Button size="sm" className="rounded-full bg-slate-900 dark:bg-white text-white dark:text-black hover:bg-slate-800 dark:hover:bg-slate-200 font-bold px-6 shadow-md">
+            <Button size="sm" className="rounded-full bg-slate-900 dark:bg-white text-white dark:text-black hover:bg-slate-800 dark:hover:bg-slate-200 font-bold px-6 shadow-md transition-transform hover:scale-105">
               Get Started
             </Button>
            </Link>

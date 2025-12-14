@@ -1,21 +1,20 @@
 import type { Metadata } from "next";
-import { Lato } from "next/font/google"; // <--- Import Lato
+import { Lato } from "next/font/google"; // Import Lato
 import "./globals.css";
-import Navbar from "@/components/navbar"; 
-import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/components/theme-provider";
-import LightRays from "@/components/LightRays";
+import Navbar from "@/components/navbar";
+import { Toaster } from "@/components/ui/sonner";
 
 // Configure Lato Font
-const lato = Lato({
-  subsets: ["latin"],
-  weight: ["100", "300", "400", "700", "900"], // Load multiple weights for rich typography
-  variable: "--font-lato", // Define the CSS variable name
+const lato = Lato({ 
+  subsets: ["latin"], 
+  weight: ["100", "300", "400", "700", "900"],
+  variable: "--font-lato",
 });
 
 export const metadata: Metadata = {
-  title: "Bharat Juris - AI Legal Aid Platform",
-  description: "Bridging the gap to justice using AI to simplify Indian Law.",
+  title: "BharatJuris - AI Legal Assistant",
+  description: "Simplifying Indian Law for everyone.",
 };
 
 export default function RootLayout({
@@ -24,30 +23,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="scroll-smooth" suppressHydrationWarning>
-      <body
-        // Apply the Lato variable and base antialiasing classes
-        className={`${lato.variable} antialiased bg-background text-foreground font-sans`}
-      >
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${lato.variable} font-sans antialiased`}>
         <ThemeProvider
             attribute="class"
-            defaultTheme="dark"
+            defaultTheme="system"
             enableSystem
             disableTransitionOnChange
           >
-          
-          <div className="fixed inset-0 -z-10 pointer-events-none overflow-hidden">
-             <LightRays /> 
-          </div>
-
-          <Navbar />
-          
-          <main className="min-h-screen relative">
+            <Navbar />
             {children}
-          </main>
-          
-          <Toaster />
-        </ThemeProvider>
+            <Toaster />
+          </ThemeProvider>
       </body>
     </html>
   );
