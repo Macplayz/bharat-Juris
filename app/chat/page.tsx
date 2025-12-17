@@ -1,8 +1,10 @@
 "use client";
 
 import { useChat } from "ai/react";
-import { useEffect, useRef, useState, memo } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import ReactMarkdown from 'react-markdown'; // Import markdown renderer
+import remarkGfm from 'remark-gfm'; // Import GFM plugin for tables/lists
 import { 
   Scale, 
   Shield, 
@@ -12,57 +14,9 @@ import {
   User, 
   ChevronDown,
   Loader2,
-  ArrowLeft
+  ArrowLeft,
+  Sparkles
 } from "lucide-react";
-
-// --- COMPONENT: SMOOTH TEXT ANIMATION ---
-// This handles the "Typewriter" effect for the AI response
-const SmoothText = memo(({ content }: { content: string }) => {
-  const [displayedContent, setDisplayedContent] = useState(content);
-  const [isTyping, setIsTyping] = useState(false);
-
-  useEffect(() => {
-    // If content resets (e.g. new chat), reset immediately
-    if (content.length < displayedContent.length) {
-      setDisplayedContent(content);
-      return;
-    }
-
-    // If we are already caught up, stop
-    if (displayedContent === content) {
-      setIsTyping(false);
-      return;
-    }
-
-    setIsTyping(true);
-
-    // Calculate how far behind we are
-    const diff = content.length - displayedContent.length;
-    
-    // Adaptive speed: If we are far behind (large chunk), type faster. 
-    // If close, type slower for smoothness.
-    const delay = diff > 50 ? 1 : diff > 20 ? 5 : 15;
-
-    const timeout = setTimeout(() => {
-      setDisplayedContent(content.slice(0, displayedContent.length + 1));
-    }, delay);
-
-    return () => clearTimeout(timeout);
-  }, [content, displayedContent]);
-
-  return (
-    <div className="relative">
-      <p className="whitespace-pre-wrap leading-relaxed">{displayedContent}</p>
-      {/* Optional: Blinking Cursor while typing */}
-      {isTyping && (
-        <span className="inline-block w-1.5 h-4 ml-1 align-middle bg-blue-400 animate-pulse rounded-full" />
-      )}
-    </div>
-  );
-});
-
-SmoothText.displayName = "SmoothText";
-
 
 // --- MAIN PAGE COMPONENT ---
 export default function BharatJurisChat() {
@@ -236,16 +190,33 @@ export default function BharatJurisChat() {
                     )}
                     
                     {/* Message Bubble */}
-                    <div className={`max-w-[80%] p-4 rounded-2xl text-[15px] shadow-sm ${
+                    <div className={`max-w-[85%] p-4 rounded-2xl text-[15px] shadow-sm ${
                         m.role === 'user' 
                         ? 'bg-[#2563eb] text-white rounded-br-none' 
                         : 'bg-[#1a1a1a] text-gray-200 border border-[#333] rounded-bl-none' 
                     }`}>
-                        {/* Use SmoothText for Assistant, normal text for User */}
+                        {/* MARKDOWN RENDERER IMPLEMENTATION */}
                         {m.role === 'user' ? (
                             <p className="whitespace-pre-wrap leading-relaxed">{m.content}</p>
                         ) : (
-                            <SmoothText content={m.content} />
+                            <ReactMarkdown 
+                              remarkPlugins={[remarkGfm]}
+                              components={{
+                                // Custom Tailwind Styles for Markdown Elements
+                                strong: ({node, ...props}) => <span className="font-bold text-blue-400" {...props} />,
+                                p: ({node, ...props}) => <p className="mb-2 last:mb-0 leading-relaxed" {...props} />,
+                                ul: ({node, ...props}) => <ul className="list-disc list-inside ml-2 mb-2 space-y-1 text-gray-300" {...props} />,
+                                ol: ({node, ...props}) => <ol className="list-decimal list-inside ml-2 mb-2 space-y-1 text-gray-300" {...props} />,
+                                li: ({node, ...props}) => <li className="marker:text-blue-500 pl-1" {...props} />,
+                                h1: ({node, ...props}) => <h1 className="text-xl font-bold mt-4 mb-2 text-white" {...props} />,
+                                h2: ({node, ...props}) => <h2 className="text-lg font-bold mt-3 mb-2 text-white" {...props} />,
+                                h3: ({node, ...props}) => <h3 className="text-md font-semibold mt-2 mb-1 text-white" {...props} />,
+                                blockquote: ({node, ...props}) => <blockquote className="border-l-2 border-blue-500 pl-4 italic text-gray-400 my-2" {...props} />,
+                                code: ({node, ...props}) => <code className="bg-black/30 px-1 py-0.5 rounded text-blue-300 font-mono text-sm" {...props} />,
+                              }}
+                            >
+                              {m.content}
+                            </ReactMarkdown>
                         )}
                     </div>
 
@@ -258,17 +229,16 @@ export default function BharatJurisChat() {
                 </div>
             ))}
             
-            {/* Loading State (Thinking Bubble) */}
+            {/* Loading State */}
             {isLoading && (
                  <div className="flex gap-4">
                     <div className="w-8 h-8 rounded-lg border border-[#333] flex items-center justify-center bg-[#111]">
                         <Bot className="w-4 h-4 text-blue-400" />
                     </div>
                     <div className="bg-[#1a1a1a] px-5 py-4 rounded-2xl border border-[#333] rounded-bl-none">
-                        <div className="flex gap-1.5">
-                            <span className="w-2 h-2 bg-gray-500 rounded-full animate-bounce"></span>
-                            <span className="w-2 h-2 bg-gray-500 rounded-full animate-bounce delay-100"></span>
-                            <span className="w-2 h-2 bg-gray-500 rounded-full animate-bounce delay-200"></span>
+                        <div className="flex gap-1.5 items-center text-xs text-gray-500">
+                            <Sparkles className="w-3 h-3 animate-spin" />
+                            Thinking...
                         </div>
                     </div>
                  </div>

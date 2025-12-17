@@ -25,20 +25,53 @@ export async function POST(req: NextRequest) {
     const buffer = Buffer.from(bytes);
     const base64Image = `data:${file.type};base64,${buffer.toString("base64")}`;
 
-    // 2. Call Groq (UPDATED: Llama 4 Scout)
+    // 2. ULTRA-STRICT PROMPT FOR SUMMARIZATION
     const completion = await groq.chat.completions.create({
       messages: [
         {
           role: "user",
           content: [
-            { type: "text", text: "Analyze this legal document image. Return valid JSON with: title, summaryPoints (label, text, iconType)." },
-            { type: "image_url", image_url: { url: base64Image } },
+            { 
+              type: "text", 
+              text: `
+                You are an elite Legal Summarizer. 
+                DO NOT transcribe the document. 
+                DO NOT describe the image visually.
+                
+                YOUR TASK: Identify the core legal intent and return ONLY this JSON structure:
+                
+                {
+                  "title": "A short 3-5 word title of the document (e.g., 'Rental Agreement Renewal')",
+                  "summaryPoints": [
+                    { 
+                      "label": "Document Type", 
+                      "text": "What is this legally? (e.g., Court Summons / Affidavit / Contract)", 
+                      "iconType": "file" 
+                    },
+                    { 
+                      "label": "Key Dates & Urgency", 
+                      "text": "Extract specific deadlines or dates mentioned. If none, state 'No immediate deadline'.", 
+                      "iconType": "clock" 
+                    },
+                    { 
+                      "label": "Action Required", 
+                      "text": "What must the user do next? (e.g., 'Sign and return' or 'Appear in court').", 
+                      "iconType": "action" 
+                    }
+                  ]
+                }
+              ` 
+            },
+            { 
+              type: "image_url", 
+              image_url: { url: base64Image } 
+            },
           ],
         },
       ],
-      // NEW ACTIVE MODEL for 2025
+      // Use Llama 4 Scout (17B) or Llama 3.2 Vision (11B)
       model: "meta-llama/llama-4-scout-17b-16e-instruct", 
-      temperature: 0.1,
+      temperature: 0.1, // Low temp = More factual/strict
       response_format: { type: "json_object" },
     });
 
