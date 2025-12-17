@@ -13,7 +13,7 @@ import {
   ScanEye,
   X,
   Play,
-  ImageIcon // Changed icon to represent Image
+  ImageIcon 
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -84,8 +84,6 @@ export default function DocumentAnalyzerPage() {
 
   return (
     <div className="min-h-screen bg-[#050505] text-white font-sans flex flex-col">
-      
-      {/* HEADER */}
       <header className="h-16 border-b border-[#1f1f1f] flex items-center px-6 md:px-12 justify-between bg-[#0a0a0a]/50 backdrop-blur-md sticky top-0 z-10">
         <div className="flex items-center gap-4">
            <Link href="/" className="p-2 text-gray-400 hover:text-white hover:bg-[#1a1a1a] rounded-full transition-colors">
@@ -101,18 +99,14 @@ export default function DocumentAnalyzerPage() {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
             </span>
-            <span className="text-[10px] text-blue-400 uppercase tracking-wider font-bold">Vision System Online</span>
+            <span className="text-[10px] text-blue-400 uppercase tracking-wider font-bold">System Online</span>
         </div>
       </header>
 
-      {/* MAIN CONTENT */}
       <main className="flex-1 flex flex-col items-center justify-center p-6 md:p-12 relative overflow-hidden">
-        
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[100px] pointer-events-none" />
 
         <div className="w-full max-w-3xl relative z-10">
-            
-            {/* STATE 1: UPLOAD BOX */}
             {!selectedFile && !result && (
               <div className="space-y-8 animate-in fade-in zoom-in-95 duration-500">
                 <div className="text-center space-y-4">
@@ -124,7 +118,6 @@ export default function DocumentAnalyzerPage() {
                   </p>
                 </div>
 
-                {/* INPUT RESTRICTED TO IMAGES ONLY */}
                 <input 
                   type="file" 
                   ref={fileInputRef} 
@@ -140,60 +133,38 @@ export default function DocumentAnalyzerPage() {
                    <div className="w-20 h-20 bg-[#151515] rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 group-hover:bg-blue-500/10 transition-all duration-300 border border-[#222] group-hover:border-blue-500/30">
                      <ImageIcon className="w-8 h-8 text-gray-400 group-hover:text-blue-400" />
                    </div>
-                   <h3 className="text-xl font-semibold text-white">Upload Image or Screenshot</h3>
+                   <h3 className="text-xl font-semibold text-white">Upload Image</h3>
                    <p className="text-sm text-gray-500 mt-2">JPG, PNG (Max 4MB)</p>
                 </div>
 
                 <div className="flex justify-center gap-8 text-xs text-gray-600 font-mono uppercase tracking-widest opacity-70">
-                  <span className="flex items-center gap-2"><Shield className="w-3 h-3" /> Secure Analysis</span>
-                  <span className="flex items-center gap-2"><Activity className="w-3 h-3" /> Vision AI Active</span>
+                  <span className="flex items-center gap-2"><Shield className="w-3 h-3" /> Encrypted</span>
+                  <span className="flex items-center gap-2"><Activity className="w-3 h-3" /> AI Vision Active</span>
                 </div>
               </div>
             )}
 
-            {/* STATE 2: PREVIEW */}
             {selectedFile && !result && (
               <div className="space-y-6 animate-in slide-in-from-bottom-8 duration-500">
                  <div className="bg-[#111] border border-[#333] p-8 rounded-3xl text-center space-y-6 shadow-2xl">
                     <div className="w-16 h-16 bg-blue-500/10 rounded-full flex items-center justify-center mx-auto">
-                      {/* Show preview of the actual image if possible, or just the icon */}
                       <ImageIcon className="w-8 h-8 text-blue-400" />
                     </div>
                     <div>
                       <h3 className="text-xl font-semibold text-white">{selectedFile.name}</h3>
-                      <p className="text-sm text-gray-500 mt-1">Ready for Vision Analysis</p>
+                      <p className="text-sm text-gray-500 mt-1">Ready for Scan</p>
                     </div>
                     
                     <div className="flex gap-4 pt-4">
-                      <Button 
-                        variant="outline" 
-                        onClick={clearSelection}
-                        className="flex-1 border-[#333] bg-transparent text-gray-400 hover:text-white hover:bg-[#1a1a1a]"
-                      >
-                        Cancel
-                      </Button>
-                      
-                      <Button 
-                        onClick={handleStartAnalysis} 
-                        disabled={isAnalyzing}
-                        className="flex-1 bg-blue-600 hover:bg-blue-500 text-white font-semibold py-6 rounded-xl flex items-center justify-center gap-2"
-                      >
-                        {isAnalyzing ? (
-                          <>
-                             <Activity className="w-5 h-5 animate-spin" /> Scanning...
-                          </>
-                        ) : (
-                          <>
-                             <Play className="w-5 h-5 fill-current" /> Analyze Image
-                          </>
-                        )}
+                      <Button variant="outline" onClick={clearSelection} className="flex-1 border-[#333] bg-transparent text-gray-400 hover:text-white hover:bg-[#1a1a1a]">Cancel</Button>
+                      <Button onClick={handleStartAnalysis} disabled={isAnalyzing} className="flex-1 bg-blue-600 hover:bg-blue-500 text-white font-semibold py-6 rounded-xl flex items-center justify-center gap-2">
+                        {isAnalyzing ? <><Activity className="w-5 h-5 animate-spin" /> Scanning...</> : <><Play className="w-5 h-5 fill-current" /> Analyze Image</>}
                       </Button>
                     </div>
                  </div>
               </div>
             )}
 
-            {/* STATE 3: RESULTS */}
             {result && (
               <div className="space-y-6 animate-in slide-in-from-bottom-8 duration-700">
                  <div className="flex items-center justify-between bg-[#111] border border-[#333] p-4 rounded-xl">
@@ -202,7 +173,7 @@ export default function DocumentAnalyzerPage() {
                         <FileText className="w-6 h-6 text-blue-400" />
                       </div>
                       <div>
-                        <p className="text-base font-medium text-white">{result.title || "Image Analysis Complete"}</p>
+                        <p className="text-base font-medium text-white">{result.title || "Analysis Complete"}</p>
                         <p className="text-xs text-gray-500">Insights Generated</p>
                       </div>
                     </div>
@@ -225,9 +196,7 @@ export default function DocumentAnalyzerPage() {
                    ))}
                  </div>
                  
-                 <Button onClick={clearSelection} className="w-full bg-[#1a1a1a] hover:bg-[#222] text-gray-300 py-6 rounded-xl mt-4">
-                   Scan Another Image
-                 </Button>
+                 <Button onClick={clearSelection} className="w-full bg-[#1a1a1a] hover:bg-[#222] text-gray-300 py-6 rounded-xl mt-4">Scan Another</Button>
               </div>
             )}
         </div>
