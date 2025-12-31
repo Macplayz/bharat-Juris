@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import Navbar from "@/components/navbar";
 import { Toaster } from "@/components/ui/sonner";
 import { GuestBadge } from "@/components/guestbadge";
+import { Analytics } from "@vercel/analytics/react";
 
 const lato = Lato({ 
   subsets: ["latin"], 
@@ -16,7 +17,7 @@ export const metadata: Metadata = {
   title: "BharatJuris - AI Legal Assistant",
   description: "Simplifying Indian Law for everyone.",
   icons: {
-    icon: "/logo 2.png", // Added Favicon here
+    icon: "/favicon.png", 
   },
 };
 
@@ -27,6 +28,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      {/* Removed playfair variable. Now using only Lato. */}
       <body className={`${lato.variable} font-sans antialiased bg-[#050505] text-white`}>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false} disableTransitionOnChange>
             
@@ -37,6 +39,8 @@ export default function RootLayout({
             <Toaster />
 
             <GuestBadge />
+            
+            <Analytics />
 
           </ThemeProvider>
       </body>
